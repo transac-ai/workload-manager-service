@@ -6,12 +6,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	api "transacai-wms/api"
+	"os"
+	"path/filepath"
+
+	"transacai-wms/core/api"
 	wms_v1 "transacai-wms/gen/wms/v1"
 	"transacai-wms/gen/wms/v1/wms_v1connect"
 	"transacai-wms/utils"
 
 	"connectrpc.com/connect"
+	"github.com/joho/godotenv"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
@@ -42,7 +46,50 @@ func (s *WMSServer) GenerateInsights(
 	return res, nil
 }
 
+func confirmNecessaryEnvVars() error {
+	// Check for necessary environment variables
+	if os.Getenv("RSS_URL") == "" {
+		return errors.New("RSS_URL not found")
+	}
+	if os.Getenv("IGS_URL") == "" {
+		return errors.New("IGS_URL not found")
+	}
+	if os.Getenv("TRANSAC_AI_RSS_API_KEY") == "" {
+		return errors.New("TRANSAC_AI_RSS_API_KEY not found")
+	}
+	if os.Getenv("TRANSAC_AI_WMS_API_KEY") == "" {
+		return errors.New("TRANSAC_AI_WMS_API_KEY not found")
+	}
+	return nil
+}
+
 func main() {
+	// get GO_ENV from environment variable
+	goEnv := os.Getenv("GO_ENV")
+	// if not production, load environment variables from .env file
+	if goEnv != "production" {
+			// resolve path to .env file
+		envPath, err := filepath.Abs(".env")
+		if err != nil {
+      	log.Printf("Warning: error resolving absolute path: %v", err)
+				return
+  	}
+
+		// Load environment variables
+		err = godotenv.Load(envPath)
+		if err != nil {
+			log.Printf("Error loading .env file: %v", err)
+			return
+		}
+	}
+
+	// confirm necessary environment variables are set
+	err := confirmNecessaryEnvVars()
+	if err != nil {
+		log.Printf("Error confirming necessary environment variables: %v", err)
+		return
+	}
+
 	wmsServer := &WMSServer{}
 	mux := http.NewServeMux()
 	path, handler := wms_v1connect.NewWMSServiceHandler(wmsServer)
