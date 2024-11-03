@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transac-ai-wms-gke
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: transac-ai-wms
+  template:
+    metadata:
+      labels:
+        app: transac-ai-wms
+    spec:
+      containers:
+      - name: igs-app
+        image: us-east1-docker.pkg.dev/transac-ai/wms-repo/transac-ai-wms-gke:1.0.1
+        ports:
+        # Connect RPC server port
+        - containerPort: 8080
+        env:
+        - name: TRANSAC_AI_WMS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: transac-ai-wms-secrets
+              key: transac-ai-wms-api-key
+        - name: TRANSAC_AI_RSS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: transac-ai-wms-secrets
+              key: transac-ai-rss-api-key
+        - name: RSS_URL
+          valueFrom:
+            secretKeyRef:
+              name: transac-ai-wms-secrets
+              key: rss-url
+        - name: IGS_URL
+          valueFrom:
+            secretKeyRef:
+              name: transac-ai-wms-secrets
+              key: igs-url
+        resources:
+          requests:
+            memory: '128Mi'
+            cpu: '50m'
+            ephemeral-storage: '128Mi'
+          limits:
+            memory: '256Mi'
+            cpu: '100m'
+            ephemeral-storage: '256Mi'
