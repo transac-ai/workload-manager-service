@@ -1,0 +1,14 @@
+# Load balancer to access the Transac AI Requests Storage Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: transac-ai-wms-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: transac-ai-wms
+  ports:
+  - name: tcp-rpc-port
+    protocol: TCP
+    port: 80
+    targetPort: 8080
