@@ -45,7 +45,7 @@ func GenerateInsightsHandler(
 		if success {
 			log.Printf("Successfully submitted insights generation request")
 			// update the request status in the RSS service
-			err = rss.UpdateRequestStatus(requestId, "INSIGHTS_GENERATION_REQUESTED")
+			err = rss.UpdateRequestStatus(requestId, params.ClientId, "PROCESSING")
 		}
 
 	}()
