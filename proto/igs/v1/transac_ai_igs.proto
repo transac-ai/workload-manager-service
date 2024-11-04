@@ -4,11 +4,11 @@ package igs.v1;
 
 option go_package = "transacai-wms/gen/igs/v1;igs_v1";
 
-// Request parameters for InsightsGeneration
+// Request parameters for GenerateInsights
 message GenerateInsightsRequest {
   string req_id = 1;
   string client_id = 2;
-  int64 prompt_id = 3;
+  int32 prompt_id = 3;
   string records_source_id = 4;
   string prompt_templates_source_id = 5;
   string from_time = 6;
@@ -20,6 +20,6 @@ message GenerateInsightsResponse {
 }
 
 // Service definition for InsightsGeneration
-service InsightsGenerationService {
+service IGSService {
   rpc GenerateInsights (GenerateInsightsRequest) returns (GenerateInsightsResponse);
 }

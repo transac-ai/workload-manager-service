@@ -12,7 +12,7 @@ option go_package = "transacai-wms/gen/wms/v1;wms_v1";
 // GenerateInsightsRequest is the request message for the GenerateInsights method
 message GenerateInsightsRequest {
   string client_id = 1;
-  int64  prompt_id = 2;
+  int32  prompt_id = 2;
   string records_source_id = 3;
   string prompt_templates_source_id = 4;
   string from_time = 5;

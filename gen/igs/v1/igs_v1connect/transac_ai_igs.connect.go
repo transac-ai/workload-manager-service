@@ -21,9 +21,8 @@ import (
 const _ = connect.IsAtLeastVersion1_13_0
 
 const (
-	// InsightsGenerationServiceName is the fully-qualified name of the InsightsGenerationService
-	// service.
-	InsightsGenerationServiceName = "igs.v1.InsightsGenerationService"
+	// IGSServiceName is the fully-qualified name of the IGSService service.
+	IGSServiceName = "igs.v1.IGSService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -34,82 +33,81 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// InsightsGenerationServiceGenerateInsightsProcedure is the fully-qualified name of the
-	// InsightsGenerationService's GenerateInsights RPC.
-	InsightsGenerationServiceGenerateInsightsProcedure = "/igs.v1.InsightsGenerationService/GenerateInsights"
+	// IGSServiceGenerateInsightsProcedure is the fully-qualified name of the IGSService's
+	// GenerateInsights RPC.
+	IGSServiceGenerateInsightsProcedure = "/igs.v1.IGSService/GenerateInsights"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
-	insightsGenerationServiceServiceDescriptor                = v1.File_igs_v1_transac_ai_igs_proto.Services().ByName("InsightsGenerationService")
-	insightsGenerationServiceGenerateInsightsMethodDescriptor = insightsGenerationServiceServiceDescriptor.Methods().ByName("GenerateInsights")
+	iGSServiceServiceDescriptor                = v1.File_igs_v1_transac_ai_igs_proto.Services().ByName("IGSService")
+	iGSServiceGenerateInsightsMethodDescriptor = iGSServiceServiceDescriptor.Methods().ByName("GenerateInsights")
 )
 
-// InsightsGenerationServiceClient is a client for the igs.v1.InsightsGenerationService service.
-type InsightsGenerationServiceClient interface {
+// IGSServiceClient is a client for the igs.v1.IGSService service.
+type IGSServiceClient interface {
 	GenerateInsights(context.Context, *connect.Request[v1.GenerateInsightsRequest]) (*connect.Response[v1.GenerateInsightsResponse], error)
 }
 
-// NewInsightsGenerationServiceClient constructs a client for the igs.v1.InsightsGenerationService
-// service. By default, it uses the Connect protocol with the binary Protobuf Codec, asks for
-// gzipped responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply
-// the connect.WithGRPC() or connect.WithGRPCWeb() options.
+// NewIGSServiceClient constructs a client for the igs.v1.IGSService service. By default, it uses
+// the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
+// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
+// connect.WithGRPCWeb() options.
 //
 // The URL supplied here should be the base URL for the Connect or gRPC server (for example,
 // http://api.acme.com or https://acme.com/grpc).
-func NewInsightsGenerationServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) InsightsGenerationServiceClient {
+func NewIGSServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) IGSServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	return &insightsGenerationServiceClient{
+	return &iGSServiceClient{
 		generateInsights: connect.NewClient[v1.GenerateInsightsRequest, v1.GenerateInsightsResponse](
 			httpClient,
-			baseURL+InsightsGenerationServiceGenerateInsightsProcedure,
-			connect.WithSchema(insightsGenerationServiceGenerateInsightsMethodDescriptor),
+			baseURL+IGSServiceGenerateInsightsProcedure,
+			connect.WithSchema(iGSServiceGenerateInsightsMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 	}
 }
 
-// insightsGenerationServiceClient implements InsightsGenerationServiceClient.
-type insightsGenerationServiceClient struct {
+// iGSServiceClient implements IGSServiceClient.
+type iGSServiceClient struct {
 	generateInsights *connect.Client[v1.GenerateInsightsRequest, v1.GenerateInsightsResponse]
 }
 
-// GenerateInsights calls igs.v1.InsightsGenerationService.GenerateInsights.
-func (c *insightsGenerationServiceClient) GenerateInsights(ctx context.Context, req *connect.Request[v1.GenerateInsightsRequest]) (*connect.Response[v1.GenerateInsightsResponse], error) {
+// GenerateInsights calls igs.v1.IGSService.GenerateInsights.
+func (c *iGSServiceClient) GenerateInsights(ctx context.Context, req *connect.Request[v1.GenerateInsightsRequest]) (*connect.Response[v1.GenerateInsightsResponse], error) {
 	return c.generateInsights.CallUnary(ctx, req)
 }
 
-// InsightsGenerationServiceHandler is an implementation of the igs.v1.InsightsGenerationService
-// service.
-type InsightsGenerationServiceHandler interface {
+// IGSServiceHandler is an implementation of the igs.v1.IGSService service.
+type IGSServiceHandler interface {
 	GenerateInsights(context.Context, *connect.Request[v1.GenerateInsightsRequest]) (*connect.Response[v1.GenerateInsightsResponse], error)
 }
 
-// NewInsightsGenerationServiceHandler builds an HTTP handler from the service implementation. It
-// returns the path on which to mount the handler and the handler itself.
+// NewIGSServiceHandler builds an HTTP handler from the service implementation. It returns the path
+// on which to mount the handler and the handler itself.
 //
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
-func NewInsightsGenerationServiceHandler(svc InsightsGenerationServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	insightsGenerationServiceGenerateInsightsHandler := connect.NewUnaryHandler(
-		InsightsGenerationServiceGenerateInsightsProcedure,
+func NewIGSServiceHandler(svc IGSServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	iGSServiceGenerateInsightsHandler := connect.NewUnaryHandler(
+		IGSServiceGenerateInsightsProcedure,
 		svc.GenerateInsights,
-		connect.WithSchema(insightsGenerationServiceGenerateInsightsMethodDescriptor),
+		connect.WithSchema(iGSServiceGenerateInsightsMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/igs.v1.InsightsGenerationService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/igs.v1.IGSService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case InsightsGenerationServiceGenerateInsightsProcedure:
-			insightsGenerationServiceGenerateInsightsHandler.ServeHTTP(w, r)
+		case IGSServiceGenerateInsightsProcedure:
+			iGSServiceGenerateInsightsHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
 	})
 }
 
-// UnimplementedInsightsGenerationServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedInsightsGenerationServiceHandler struct{}
+// UnimplementedIGSServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedIGSServiceHandler struct{}
 
-func (UnimplementedInsightsGenerationServiceHandler) GenerateInsights(context.Context, *connect.Request[v1.GenerateInsightsRequest]) (*connect.Response[v1.GenerateInsightsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("igs.v1.InsightsGenerationService.GenerateInsights is not implemented"))
+func (UnimplementedIGSServiceHandler) GenerateInsights(context.Context, *connect.Request[v1.GenerateInsightsRequest]) (*connect.Response[v1.GenerateInsightsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("igs.v1.IGSService.GenerateInsights is not implemented"))
 }
