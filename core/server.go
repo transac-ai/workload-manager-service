@@ -60,6 +60,9 @@ func confirmNecessaryEnvVars() error {
 	if os.Getenv("TRANSAC_AI_WMS_API_KEY") == "" {
 		return errors.New("TRANSAC_AI_WMS_API_KEY not found")
 	}
+	if os.Getenv("TRANSAC_AI_IGS_API_KEY") == "" {
+		return errors.New("TRANSAC_AI_IGS_API_KEY not found")
+	}
 	return nil
 }
 

@@ -1,0 +1,4 @@
+date,time,timezone,version,title,description,change_type,lead,image_build_command,updated_deployment,pods_restarted,deployment_status,tested
+2024-11-02,12:05:00,EST,1.0.0,Initial deployment of WMS,First deployment and building of image for WMS service,major,Kural,gcloud builds submit --tag us-east1-docker.pkg.dev/transac-ai/wms-repo/transac-ai-wms-gke:1.0.0 .,true,true,success,false
+2024-11-02,13:21:00,EST,1.0.1,Updated protobuf package,Updates to dependency package protobuf,minor,Kural,gcloud builds submit --tag us-east1-docker.pkg.dev/transac-ai/wms-repo/transac-ai-wms-gke:1.0.1 .,true,true,success,false
+2024-11-03,20:24:00,EST,1.0.2,Integration with IGS service,Updates to multiple modules to support integration with IGS service,minor,Kural,gcloud builds submit --tag us-east1-docker.pkg.dev/transac-ai/wms-repo/transac-ai-wms-gke:1.0.2 .,true,true,success,false

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: igs-app
-        image: us-east1-docker.pkg.dev/transac-ai/wms-repo/transac-ai-wms-gke:1.0.1
+        image: us-east1-docker.pkg.dev/transac-ai/wms-repo/transac-ai-wms-gke:1.0.2
         ports:
         # Connect RPC server port
         - containerPort: 8080
@@ -29,6 +29,11 @@ spec:
             secretKeyRef:
               name: transac-ai-wms-secrets
               key: transac-ai-rss-api-key
+        - name: TRANSAC_AI_IGS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: transac-ai-wms-secrets
+              key: transac-ai-igs-api-key
         - name: RSS_URL
           valueFrom:
             secretKeyRef:
@@ -41,10 +46,10 @@ spec:
               key: igs-url
         resources:
           requests:
-            memory: '128Mi'
+            memory: '52Mi'
             cpu: '50m'
-            ephemeral-storage: '128Mi'
+            ephemeral-storage: '10Mi'
           limits:
-            memory: '256Mi'
+            memory: '128Mi'
             cpu: '100m'
-            ephemeral-storage: '256Mi'
+            ephemeral-storage: '52Mi'
