@@ -2,15 +2,39 @@ package lib
 
 import (
 	"context"
+	"crypto/tls"
 	"errors"
 	"log"
+	"net"
 	"net/http"
 	"os"
+	"time"
 	igs_v1 "transacai-wms/gen/igs/v1"
 	"transacai-wms/gen/igs/v1/igs_v1connect"
 
 	"connectrpc.com/connect"
+	"golang.org/x/net/http2"
 )
+
+func newInsecureClient() *http.Client {
+  return &http.Client{
+    Transport: &http2.Transport{
+      AllowHTTP: true,
+			DialTLSContext: func(ctx context.Context, network, addr string, cfg *tls.Config) (net.Conn, error) {
+				return net.Dial(network, addr)
+			},
+      // Timeouts
+			IdleConnTimeout: 30 * time.Second,
+			PingTimeout: 30 * time.Second,
+			ReadIdleTimeout: 30 * time.Second,
+			WriteByteTimeout: 30 * time.Second,
+    },
+		// Disable redirects
+		CheckRedirect: func(_ *http.Request, _ []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+  }
+}
 
 /**
  * SubmitGenerateInsightsRequest submits a new insights generation request to the IGS service
@@ -24,17 +48,31 @@ func SubmitGenerateInsightsRequest(generateInsightsParams *igs_v1.GenerateInsigh
 		return false, errors.New("IGS URL not found")
 	}
 
+	log.Printf("Initializing gRPC client to connect to IGS service")
 	// Setup gRPC client to connect to IGS service
-	client := igs_v1connect.NewInsightsGenerationServiceClient(
-		http.DefaultClient,
+	client := igs_v1connect.NewIGSServiceClient(
+		newInsecureClient(),
 		IGS_URL,
 		connect.WithGRPC(),
 	)
 
+	// Prepare parameters for the insights generation request
+	req := connect.NewRequest(generateInsightsParams)
+	// get IGS api key
+	igsApiKey := os.Getenv("TRANSAC_AI_IGS_API_KEY")
+	// validate api key
+	if igsApiKey == "" {
+		log.Printf("IGS API key not found")
+		return false, errors.New("IGS API key not found")
+	}
+	// Set the authorization header
+	req.Header().Set("Authorization", "Bearer " + igsApiKey)
+
+	log.Printf("Submitting insights generation request to IGS")
 	// Create a new request to generate insights
 	res, err := client.GenerateInsights(
 		context.Background(),
-		connect.NewRequest(generateInsightsParams),
+		req,
 	)
 	if err != nil {
 		log.Printf("Error generating insights: %v", err)
