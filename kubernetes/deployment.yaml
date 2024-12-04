@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: transac-ai-wms-gke
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: transac-ai-wms
@@ -46,10 +46,10 @@ spec:
               key: igs-url
         resources:
           requests:
-            memory: '52Mi'
+            memory: '26Mi'
             cpu: '50m'
             ephemeral-storage: '10Mi'
           limits:
-            memory: '128Mi'
-            cpu: '100m'
-            ephemeral-storage: '52Mi'
+            memory: '26Mi'
+            cpu: '50m'
+            ephemeral-storage: '10Mi'
